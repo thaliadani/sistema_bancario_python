@@ -1,82 +1,101 @@
-# O menu é uma string multilinha (usando triple quotes) que contém as opções disponíveis.
-menu = ("""
-    ============= Bem vindo ao sistema bancário =============
+class ContaBancaria:
+    def __init__(self):
+        self.saldo = 0
+        self.maximo_por_saque = 500
+        self.limite_de_saques = 3
+        self.extrato = ""
     
-        "Digite 1 para sacar"
-        "Digite 2 para depositar"
-        "Digite 3 para visualizar seu extrato"
-        "Digite 4 para sair"
-      """)
+    def criar_usuario(self):
+        nome = input("Digite o seu nome: ")
+        return nome
 
-saldo_inicial = 0
+    def criar_conta_corrente(self):
+        numero_da_conta = input("Digite o número da conta: ")
+        return numero_da_conta
+   
+    def sacar(self):
+        if self.limite_de_saques == 0:
+            print("Você atingiu o limite de saques diários.")
+            return
 
-# Variável que armazena o extrato das operações realizadas pelo usuário.
-extrato = ""
-
-# Define o valor máximo que pode ser sacado em uma única operação.
-maximo_por_saque = 500
-
-# Define o número máximo de saques que podem ser realizados em um dia.
-LIMITE_DE_SAQUES = 3
-
-# Inicia um loop infinito que só será interrompido quando o usuário escolher a opção de sair.
-while True:
-    # Exibe o menu e solicita que o usuário escolha uma opção.
-    opcao = input(menu)
-    
-    # Verifica se a opção escolhida foi "1" (Sacar).
-    if opcao == "1":
-        print("Você escolheu sacar")
-        
-        # Solicita ao usuário o valor que deseja sacar.
         valor_saque = float(input("Digite o valor que deseja sacar: "))
-        
-        # Verifica se o valor do saque é maior que o limite permitido por saque.
-        if valor_saque > maximo_por_saque:
-            print("O valor máximo por saque é de R$500,00")
-        
-        # Verifica se o usuário já atingiu o limite de saques diários.
-        elif LIMITE_DE_SAQUES == 0:
-            print("Você atingiu o limite de saques diários")
-        
-        # Caso todas as verificações sejam atendidas, o saque é realizado.
+
+        if valor_saque > self.maximo_por_saque:
+            print("O valor máximo por saque é de R$500,00.")
+        elif valor_saque > self.saldo:
+            print("Saldo insuficiente.")
         else:
-            # Decrementa o limite de saques disponíveis.
-            LIMITE_DE_SAQUES -= 1
-            
-            # Subtrai o valor do saque do saldo.
-            saldo_inicial -= valor_saque
-            
-            # Adiciona a operação de saque ao extrato.
-            extrato += f"Saque: R${valor_saque:.2f}\n"
-    
-    # Verifica se a opção escolhida foi "2" (Depositar).
-    elif opcao == "2":
-        print("Você escolheu depositar")
-        
-        # Solicita ao usuário o valor que deseja depositar.
+            self.saldo -= valor_saque
+            self.limite_de_saques -= 1
+            self.extrato += f"Saque: R${valor_saque:.2f}\n"
+            print(f"Saque de R${valor_saque:.2f} realizado com sucesso.")
+
+    def depositar(self):
         valor_deposito = float(input("Digite o valor que deseja depositar: "))
+        self.saldo += valor_deposito
+        self.extrato += f"Depósito: R${valor_deposito:.2f}\n"
+        print(f"Depósito de R${valor_deposito:.2f} realizado com sucesso.")
+
+    def visualizar_extrato(self):
+        print("\n========== EXTRATO ==========")
+        print("Movimentações:")
+        print(self.extrato if self.extrato else "Não foram realizadas movimentações.")
+        print(f"Saldo atual: R${self.saldo:.2f}")
+        print("=============================")
+
+
+def main():
+    conta = ContaBancaria()
+    usuario = None
+    numero_conta = None
+    ERRO_USUARIO_CONTA = "Você precisa criar um usuário e uma conta corrente primeiro."
+
+    while True:
+        menu = """
+        ============ Bem-vindo ao sistema bancário ============
         
-        # Adiciona o valor do depósito ao saldo.
-        saldo_inicial += valor_deposito
+        Digite 1 para criar usuário
+        Digite 2 para criar conta corrente
+        Digite 3 para sacar
+        Digite 4 para depositar
+        Digite 5 para visualizar seu extrato
+        Digite 6 para sair
+        """
         
-        # Adiciona a operação de depósito ao extrato.
-        extrato += f"Depósito: R${valor_deposito:.2f}\n"
-    
-    # Verifica se a opção escolhida foi "3" (Visualizar extrato).
-    elif opcao == "3":
-        print("Você escolheu visualizar seu extrato")
+        opcao = input(menu)
         
-        # Exibe o extrato das operações realizadas.
-        print(extrato)
-    
-    # Verifica se a opção escolhida foi "4" (Sair).
-    elif opcao == "4":
-        print("Você escolheu sair")
+        if opcao == "1":
+            usuario = conta.criar_usuario()
+            print(f"Usuário criado com sucesso: {usuario}")
         
-        # Interrompe o loop e encerra o programa.
-        break
-    
-    # Caso o usuário digite uma opção inválida, exibe uma mensagem de erro.
-    else:
-        print("Opção inválida, tente novamente")
+        elif opcao == "2":
+            numero_conta = conta.criar_conta_corrente()
+            print(f"Conta corrente criada com sucesso: {numero_conta}")
+        
+        elif opcao == "3":
+            if usuario and numero_conta:
+                conta.sacar()
+            else:
+                print(ERRO_USUARIO_CONTA)
+        
+        elif opcao == "4":
+            if usuario and numero_conta:
+                conta.depositar()
+            else:
+                print(ERRO_USUARIO_CONTA)
+        
+        elif opcao == "5":
+            if usuario and numero_conta:
+                conta.visualizar_extrato()
+            else:
+                print(ERRO_USUARIO_CONTA)
+        
+        elif opcao == "6":
+            print("Obrigado por usar nosso sistema bancário.")
+            break
+        
+        else:
+            print("Opção inválida, tente novamente.")
+
+if __name__ == "__main__":
+    main()
