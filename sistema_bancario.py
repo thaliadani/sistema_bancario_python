@@ -1,4 +1,3 @@
-# Aqui é definido o menu do sistema bancário, que será exibido para o usuário.
 # O menu é uma string multilinha (usando triple quotes) que contém as opções disponíveis.
 menu = ("""
     ============= Bem vindo ao sistema bancário =============
@@ -9,8 +8,7 @@ menu = ("""
         "Digite 4 para sair"
       """)
 
-# Variável que armazena o saldo inicial do usuário, começando com R$ 0,00.
-saldo = 0
+saldo_inicial = 0
 
 # Variável que armazena o extrato das operações realizadas pelo usuário.
 extrato = ""
@@ -47,7 +45,7 @@ while True:
             LIMITE_DE_SAQUES -= 1
             
             # Subtrai o valor do saque do saldo.
-            saldo -= valor_saque
+            saldo_inicial -= valor_saque
             
             # Adiciona a operação de saque ao extrato.
             extrato += f"Saque: R${valor_saque:.2f}\n"
@@ -60,7 +58,7 @@ while True:
         valor_deposito = float(input("Digite o valor que deseja depositar: "))
         
         # Adiciona o valor do depósito ao saldo.
-        saldo += valor_deposito
+        saldo_inicial += valor_deposito
         
         # Adiciona a operação de depósito ao extrato.
         extrato += f"Depósito: R${valor_deposito:.2f}\n"
