@@ -1,101 +1,75 @@
 class ContaBancaria:
-    def __init__(self):
-        self.saldo = 0
-        self.maximo_por_saque = 500
-        self.limite_de_saques = 3
-        self.extrato = ""
+    def __init__(self, usuario, numero_conta,saldo=0, limite_valor_saque=500, limite_saque_por_dia=3,extrato=""):
+        self._usuario = usuario
+        self._numero_conta = numero_conta
+        self._saldo = saldo
+        self._limite_valor_saque = limite_valor_saque
+        self._limite_saque_por_dia = limite_saque_por_dia
+        self._extrato = extrato
     
-    def criar_usuario(self):
-        nome = input("Digite o seu nome: ")
-        return nome
-
-    def criar_conta_corrente(self):
-        numero_da_conta = input("Digite o número da conta: ")
-        return numero_da_conta
-   
-    def sacar(self):
-        if self.limite_de_saques == 0:
-            print("Você atingiu o limite de saques diários.")
-            return
-
-        valor_saque = float(input("Digite o valor que deseja sacar: "))
-
-        if valor_saque > self.maximo_por_saque:
-            print("O valor máximo por saque é de R$500,00.")
-        elif valor_saque > self.saldo:
-            print("Saldo insuficiente.")
+    def usuario(self):
+        return self._usuario
+    
+    def numero_conta(self):
+        return self._numero_conta
+    
+    def depositar(self, valor):
+        if valor > 0:
+            self._saldo += valor
+            self._extrato += f"Depósito: +{valor}\n"
         else:
-            self.saldo -= valor_saque
-            self.limite_de_saques -= 1
-            self.extrato += f"Saque: R${valor_saque:.2f}\n"
-            print(f"Saque de R${valor_saque:.2f} realizado com sucesso.")
+            print("Valor inválido")
+    
+    def sacar(self, valor):
+        if self._saldo >= valor and self._limite_valor_saque >= valor and self._limite_saque_por_dia > 0:
+            self._saldo -= valor
+            self._limite_saque_por_dia -= 1
+            self._extrato += f"Saque: -{valor}\n"
+        else:
+            print("Saque não permitido")
+            
+    def extrato(self):
+        return self._extrato
 
-    def depositar(self):
-        valor_deposito = float(input("Digite o valor que deseja depositar: "))
-        self.saldo += valor_deposito
-        self.extrato += f"Depósito: R${valor_deposito:.2f}\n"
-        print(f"Depósito de R${valor_deposito:.2f} realizado com sucesso.")
+def menu():
+    menu = """
+    Bem-vindo ao Banco Python
+    
+    1. Visualizar conta
+    2. Depositar
+    3. Sacar
+    4. Extrato
+    5. Sair
+    """
+    return menu
 
-    def visualizar_extrato(self):
-        print("\n========== EXTRATO ==========")
-        print("Movimentações:")
-        print(self.extrato if self.extrato else "Não foram realizadas movimentações.")
-        print(f"Saldo atual: R${self.saldo:.2f}")
-        print("=============================")
-
+def criar_conta():
+    usuario = input("Digite o nome do titular da conta: ")
+    numero_conta = input("Digite o número da conta: ")
+    return ContaBancaria(usuario, numero_conta)
 
 def main():
-    conta = ContaBancaria()
-    usuario = None
-    numero_conta = None
-    ERRO_USUARIO_CONTA = "Você precisa criar um usuário e uma conta corrente primeiro."
-
+    conta = criar_conta()
     while True:
-        menu = """
-        ============ Bem-vindo ao sistema bancário ============
-        
-        Digite 1 para criar usuário
-        Digite 2 para criar conta corrente
-        Digite 3 para sacar
-        Digite 4 para depositar
-        Digite 5 para visualizar seu extrato
-        Digite 6 para sair
-        """
-        
-        opcao = input(menu)
-        
+        print(menu())
+        opcao = input("Digite a opção desejada: ")
         if opcao == "1":
-            usuario = conta.criar_usuario()
-            print(f"Usuário criado com sucesso: {usuario}")
-        
+            print(f"Titular: {conta.usuario()}\nNúmero da conta: {conta.numero_conta()}\nSaldo: {conta._saldo}")
         elif opcao == "2":
-            numero_conta = conta.criar_conta_corrente()
-            print(f"Conta corrente criada com sucesso: {numero_conta}")
-        
+            valor = float(input("Digite o valor a ser depositado: "))
+            conta.depositar(valor)
         elif opcao == "3":
-            if usuario and numero_conta:
-                conta.sacar()
-            else:
-                print(ERRO_USUARIO_CONTA)
-        
+            valor = float(input("Digite o valor a ser sacado: "))
+            conta.sacar(valor)
         elif opcao == "4":
-            if usuario and numero_conta:
-                conta.depositar()
-            else:
-                print(ERRO_USUARIO_CONTA)
-        
+            print(conta.extrato())
         elif opcao == "5":
-            if usuario and numero_conta:
-                conta.visualizar_extrato()
-            else:
-                print(ERRO_USUARIO_CONTA)
-        
-        elif opcao == "6":
-            print("Obrigado por usar nosso sistema bancário.")
+            print("Saindo...")
             break
-        
-        else:
-            print("Opção inválida, tente novamente.")
+main()
 
-if __name__ == "__main__":
-    main()
+
+
+
+
+
