@@ -1,0 +1,32 @@
+Metadata-Version: 2.2
+Name: banco_python
+Version: 0.1
+Summary: Uma biblioteca para gerenciar contas bancárias
+Home-page: https://github.com/thaliadani/sistema_bancario_python
+Author: Thalia Danielle
+Author-email: thalia.dani2@gmail.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-python
+Dynamic: summary
+
+# Banco Python
+
+Uma biblioteca Python para gerenciar contas bancÃ¡rias.
+
+## InstalaÃ§Ã£o
+
+VocÃª pode instalar a biblioteca usando pip:
+
+```bash
+pip install banco_python
