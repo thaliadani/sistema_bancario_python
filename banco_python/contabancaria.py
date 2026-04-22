@@ -1,4 +1,11 @@
 class ContaBancaria:
+    """
+    Classe que simula o comportamento de uma conta bancária.
+    
+    Atributos:
+        _usuario (str): Nome do titular da conta.
+        _saldo (float): Saldo disponível na conta.
+    """
     def __init__(self, usuario, numero_conta,saldo=0, limite_valor_saque=500, limite_saque_por_dia=3,extrato=""):
         self._usuario = usuario
         self._numero_conta = numero_conta
@@ -7,6 +14,7 @@ class ContaBancaria:
         self._limite_saque_por_dia = limite_saque_por_dia
         self._extrato = extrato
     
+    # Métodos Getter para acessar atributos privados
     def usuario(self):
         return self._usuario
     
@@ -14,6 +22,7 @@ class ContaBancaria:
         return self._numero_conta
     
     def depositar(self, valor):
+        """Adiciona um valor ao saldo da conta se o valor for positivo."""
         if valor > 0:
             self._saldo += valor
             self._extrato += f"Depósito: +{valor}\n"
@@ -21,6 +30,11 @@ class ContaBancaria:
             print("Valor inválido")
     
     def sacar(self, valor):
+        """
+        Realiza a retirada de dinheiro da conta.
+        Verifica se há saldo suficiente, se o valor respeita o limite por saque
+        e se o usuário ainda possui saques diários disponíveis.
+        """
         if self._saldo >= valor and self._limite_valor_saque >= valor and self._limite_saque_por_dia > 0:
             self._saldo -= valor
             self._limite_saque_por_dia -= 1
@@ -29,9 +43,11 @@ class ContaBancaria:
             print("Saque não permitido")
             
     def extrato(self):
+        """Retorna a string contendo o histórico de transações."""
         return self._extrato
 
 def menu():
+    """Retorna a representação visual do menu de opções."""
     menu = """
     Bem-vindo ao Banco Python
     
@@ -44,11 +60,13 @@ def menu():
     return menu
 
 def criar_conta():
+    """Solicita entradas do usuário para instanciar uma nova conta."""
     usuario = input("Digite o nome do titular da conta: ")
     numero_conta = input("Digite o número da conta: ")
     return ContaBancaria(usuario, numero_conta)
 
 def main():
+    """Função principal que gerencia o loop de interação com o usuário."""
     conta = criar_conta()
     while True:
         print(menu())
@@ -67,9 +85,3 @@ def main():
             print("Saindo...")
             break
 main()
-
-
-
-
-
-
